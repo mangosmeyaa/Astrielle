@@ -12,7 +12,7 @@ config = Dynaconf(settings_file=["settings.toml"])
 def connect_db():
     conn = pymysql.connect(
         host="db.steamcenter.tech",
-        user="cogboe",
+        user="mmiddleton2",
         password=config.password,
         database="mmiddleton2_astrielle",
         autocommit= True,
