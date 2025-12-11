@@ -36,7 +36,7 @@ def browse():
     result = cursor.fetchone()
 
     connection.close()
-    
+
     return render_template("browse.html.jinja", product=result)
 
 @app.route("/product/<product_id>")
@@ -45,7 +45,7 @@ def product_page(product_id):
 
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM `Product` WHERE ID = %s", ( product_id )))
+    cursor.execute("SELECT * FROM `Product` WHERE ID = %s", ( product_id ))
     result = cursor.fetchall()
 
     connection.close()
