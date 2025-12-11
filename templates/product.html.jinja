@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="styles.css">
   </head>
     <body>
     
-{% include "components/navbar.html.html.jinja"%}
-<h1> {{ product["Name"] }}</h1>
-    </body>
+{% include "components/navbar.html.jinja"%}
+<img class="mx-auto" img src="/static/products/green_candle(4).png">
+
+<h1> {{ product['Name'] }}</h1>
+<h1> {{ product["Price"] }}</h1>
+  </body>
 </html>

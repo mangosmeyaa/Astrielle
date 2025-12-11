@@ -16,7 +16,7 @@ def connect_db():
         password=config.password,
         database="mmiddleton2_astrielle",
         autocommit= True,
-        cursoorclass= pymysql.cursors.DictCursor
+        cursorclass= pymysql.cursors.DictCursor
     )
     return conn
 
@@ -33,11 +33,11 @@ def browse():
 
     cursor.execute("SELECT * FROM Product")
 
-    result = cursor.fetchone()
+    result = cursor.fetchall()
 
     connection.close()
 
-    return render_template("browse.html.jinja", product=result)
+    return render_template("browse.html.jinja", products=result)
 
 @app.route("/product/<product_id>")
 def product_page(product_id):
@@ -46,7 +46,7 @@ def product_page(product_id):
     cursor = connection.cursor()
 
     cursor.execute("SELECT * FROM `Product` WHERE ID = %s", ( product_id ))
-    result = cursor.fetchall()
+    result = cursor.fetchone()
 
     connection.close()
 
