@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect
+from flask_login import LoginManager, login_user
 
 import pymysql
 
@@ -10,6 +11,37 @@ app = Flask(__name__)
 config = Dynaconf(settings_file=["settings.toml"])
 
 app.secret_key = config.secret_key
+
+login_manager = LoginManager(app)
+
+class User:
+  is_authenticated = True
+  is_active = True
+  is_anonymous = False
+
+  def __init__(self, result):
+      self.name = result['Name']
+      self.email = result['Email']
+      self.address = result['Address']
+      self.id = result['ID']
+
+def get_id(self):
+    return str(self.id)
+
+@login_manager.user_loader
+def load_user(user_id):
+
+  connection = connect_db()
+  cursor = connection.cursor()
+  cursor.execute("SELECT * FROM `USER` WHERE `ID` = %s" , (user_id))
+
+  result = cursor.fetchone()
+  connection.close()
+  if result is None:
+      return None
+  
+  return User(result)
+
 
 def connect_db():
     conn = pymysql.connect(
@@ -56,7 +88,7 @@ def product_page(product_id):
 
 @app.route('/sign_up', methods=["POST" , "GET"])
 def register():
-     if request.method == "POST" :
+    if request.method == "POST" :
         name = request.form["name"]
 
         email = request.form["email"]
@@ -76,12 +108,44 @@ def register():
 
         cursor = connection.cursor()
 
-        cursor.execute("""
-       INSERT INTO `User` (`Name`, `Password`, `Email, `Address`)
-       VALUES(%s, %s, %s, %s)
-       """, (name ,password, email, address))    
-        
+        try:
+          cursor.execute("""
+           INSERT INTO `User` (`Name`, `Password`, `Email, `Address`)
+           VALUES(%s, %s, %s, %s)
+           """, (name ,password, email, address))    
+        except pymysql.err.IntegrityError:
+          flash("User with that email already exists.")
+          connection.close()
+        else:
+            return redirect('/login')
 
-        return redirect('/login')
+    return render_template("sign_up.html.jinja")
+     
+     
+     
 
-     return render_template("sign_up.html.jinja")
+
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        connection = connect_db()
+
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * FROM `User` WHERE `Email` = %s " , (email) )
+        result = cursor.fetchone()
+
+        if result is None:
+            flash("No user found.")
+        elif password != result["Password"]:
+            flash("Incorrect password")
+        else:
+            login_user(User (result))
+            return redirect('/browse')
+        print(result)
+
+        connection.close()
+
+    return render_template("login.html.jinja")
