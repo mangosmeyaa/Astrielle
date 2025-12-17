@@ -149,3 +149,9 @@ def login():
         connection.close()
 
     return render_template("login.html.jinja")
+
+@app.route("/logout")
+def logout():
+    #TODO: Add actual logout functionality
+
+  return redirect("/")
