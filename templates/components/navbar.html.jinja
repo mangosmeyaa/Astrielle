@@ -1,34 +1,26 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
+  <html lang="en"></html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-   <link rel="stylesheet" href="static/css/styles.css">
   </head>
     <body>
-   <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Candle Navbar</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+   
 <body>
-<nav
-  class="bg-[#F8EDE3] p-4 px-6 rounded-b-2xl shadow-md flex items-center justify-between font-semibold text-[#694f3a]">
-
+<nav>
+  <div class="bg-[#FF8FAB] p-5 px-6 rounded-b-2xl shadow-md flex items-center justify-between font-semibold text-[#FFC2D1]">
 
   {{current_user.email}}
 
-  <div class="flex items-center gap-10 text-sm  px-4 py-2">
-  <a href="/" class="hover:text-[#A67C52] transition">Homepage</a>
-  <a href="/contact" class="hover:text-[#A67C52] transition">Browse</a>
-  <a href="/browse" class="hover:text-[#A67C52] transition"></a>
+  <div class="flex w-full justify-between items-center px-4 py-2">
+  <a href="/home" class="hover:text-[#e05780] transition">Home</a>
+  <a href="/contact" class="hover:text-[#e05780] transition">Browse</a>
+  <a href="/browse" class="hover:text-[#e05780] transition"></a>
 
   <a href="/cart">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-[#A67C52] transition" fill="none"
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-[#e05780] transition" fill="none"
       viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -37,13 +29,12 @@
 
   <div class="flex items-center gap-2">
     {% if not current_user.is_authenticated %}
-      <a href="/login" class="relative hover:text-[#A67C52] transition">Login</a>
     {% else %}
       <div class="text-[#6b4f3f] font-semibold">
-        Hi, {{current_user.name}}
+        Hey, {{current_user.name}}
       </div>
     {% endif %}
-    <a href="/register" class="relative hover:text-[#A67C52] transition">Register</a>
+
 
     <div class="relative group">
       <button class="hover:text-[#6b4f3f] flex items-center">
@@ -53,16 +44,16 @@
         </svg>
       </button>
 
-      <ul class="absolute right-0 mt-2 w-32 bg-[#A67C52] border border-[#A67C52] rounded-md 
+      <ul class="absolute right-0 mt-2 w-32 bg-[#e05780]  rounded-md 
              opacity-0 invisible group-hover:opacity-100 group-hover:visible 
              transition-all duration-200 text-white">
-        <li><a href="/login" class="block px-4 py-2 hover:bg-[#926B45]">Sign In</a></li>
-        <li><a href="/register" class="block px-4 py-2 hover:bg-[#926B45]">Register</a></li>
+        <li><a href="/login" class="block px-4 py-2 hover:bg-[#FFC2D1]">Log in</a></li>
+        <li><a href="/register" class="block px-4 py-2 hover:bg-[#FFC2D1]">Sign up</a></li>
       </ul>
+      </nav>
     </div>
-
   </div>
 </div>
-</nav>
+
   </body>
 </html>
