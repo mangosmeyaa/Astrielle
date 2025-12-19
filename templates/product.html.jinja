@@ -13,5 +13,10 @@
 
 <h1> {{ product['Name'] }}</h1>
 <h1> {{ product["Price"] }}</h1>
+<form method="post" action="/product{{ product['ID']}}/add_to_cart">
+
+<label>Qty:</label>
+<input type="number" name="qty" value="1" min="1" max="5">
+</form>
   </body>
 </html>
