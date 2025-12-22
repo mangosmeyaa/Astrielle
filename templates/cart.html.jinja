@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+<body>
+{% include "components/navbar.html.jinja" %}
+    {% for x in cart  %}
+    <div class="cart-row"
+    <img src="{{x['Image]}}">
+    <div>{{x['Name']}}</div>
+    <div>{{x['Quantity']}}</div>
+    <div>${{x['Price']}}</div>
+    <div>${{ x['Price'] * x['Quantity'] }} </div> </div>
+
+
+
+<div>{{x}}</div>
+{% endfor %}
+</body>
+</html>
