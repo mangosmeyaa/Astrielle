@@ -198,4 +198,4 @@ def cart():
     connection.close()
 
 
-    return render_template("cart.html.jinja", cart=results)
+    return render_template("cart.html.jinja", y)
