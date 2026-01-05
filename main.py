@@ -199,3 +199,21 @@ def cart():
 
 
     return render_template("cart.html.jinja", y)
+
+@app.route('/cart/<product_id>/update_qty', methods=["POST"])
+@login_required
+def update_cart(product_id):
+  new_qty = request.form['qty']
+  connection = connect_db
+  cursor = connection.cursor()
+
+  cursor.execute(""""
+    UPDATE `Cart`
+    SET `Quantity` = %s
+    WHERE `ProductID` = %s AND `UserID` = %s
+
+ """, (new_qty, product_id, current_user.id) )
+  
+  connection.close()
+
+  return redirect('/cart')
