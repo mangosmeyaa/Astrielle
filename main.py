@@ -88,6 +88,8 @@ def product_page(product_id):
        abort(404)
 
     return render_template("product.html.jinja", product=result)
+
+
 @app.route("/product/<product_id>/add_to_cart", methods=["POST"])
 @login_required
 def add_to_cart(product_id):
@@ -115,32 +117,31 @@ def register():
         name = request.form["name"]
 
         email = request.form["email"]
+        address = request.form["address"]
 
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
-
-        address= request.form["address"]
 
         if password!= confirm_password:
             flash("Passwords do not match")
         elif len(password) < 8:
             flash("Password is too short")
         else:
-            return "Thank you for signing up"
-        connection = connect_db()
+            connection = connect_db()
 
-        cursor = connection.cursor()
+            cursor = connection.cursor()
 
-        try:
-          cursor.execute("""
-           INSERT INTO `User` (`Name`, `Password`, `Email, `Address`)
-           VALUES(%s, %s, %s, %s)
-           """, (name ,password, email, address))    
-        except pymysql.err.IntegrityError:
-          flash("User with that email already exists.")
-          connection.close()
-        else:
-            return redirect('/login')
+            try:
+                cursor.execute("""
+                INSERT INTO `User` (`Name`, `Password`, `Email`, `Address`)
+                VALUES(%s, %s, %s, %s)
+                """, (name ,password, email, address )) 
+                connection.close()   
+            except pymysql.err.IntegrityError:
+                flash("User with that email already exists.")
+                connection.close()
+            else:
+                return redirect('/login')
 
     return render_template("sign_up.html.jinja")
      
@@ -159,6 +160,8 @@ def login():
 
         cursor.execute("SELECT * FROM `User` WHERE `Email` = %s " , (email) )
         result = cursor.fetchone()
+        connection.close()
+
 
         if result is None:
             flash("No user found.")
@@ -166,10 +169,12 @@ def login():
             flash("Incorrect password")
         else:
             login_user(User (result))
-            return redirect('/browse')
-        print(result)
 
-        connection.close()
+            return redirect('/browse')
+        
+
+        
+        
 
     return render_template("login.html.jinja")
 
@@ -217,3 +222,36 @@ def update_cart(product_id):
   connection.close()
 
   return redirect('/cart')
+
+@app.route('/checkout')
+def checkout():
+    connection = connect_db
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT * FROM `Cart`
+        JOIN `Product` ON `Product`. `ID` = `Cart` . `ProductID`
+        WHERE `UserID` = %s  
+    """,  (current_user.id))
+    results = cursor.fetchall()
+
+    if request.method == 'POST':
+     cursor.execute("INSERT INTO `Sale` (`UserID`) VALUES (%s)" , (current_user.id, ))
+     sale = cursor.lastrowid
+     for item in results:
+        cursor.execute("""
+        INSERT INTO `SaleProduct`
+              (`Sale_ID`, `Product_ID`, `Quantity`)
+        VALUES
+            (%s, %s, %s)
+                       """, (sale, item['ProductID'], item['Quantity']))
+        
+        cursor.execute('DELETE FROM `Cart` WHERE `UserID` = %s', (current_user.id,))
+        
+        redirect ('/thank-you')
+
+     connection.close()
+
+
+    return render_template("checkout.html.jinja", y)
