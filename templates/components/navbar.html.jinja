@@ -6,53 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-    <body>
    
-<body>
-<nav>
-  <div class="bg-[#0b090a] p-5 px-6  shadow-md flex items-center justify-between font-semibold text-[#eff7f6]">
-
-  {{current_user.email}}
-
-  <div class="flex w-full justify-between items-center px-4 py-2">
-  <a href="/" class="hover:text-[#fbfbf2] transition">Home</a>
-  <a href="/browse" class="hover:text-[#fbfbf2] transition">Browse</a>
-
-  <a href="/cart">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-[#c4fff9] transition" fill="none"
-      viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-    </svg>
-  </a>
-
+<body class="bg-[#F4EBE8]">
+<nav class="bg-[#F4EBE8] p-5 px-6 shadow-md flex items-center font-mono text-[#000000]">
   <div class="flex items-center gap-2">
-    {% if not current_user.is_authenticated %}
-    {% else %}
-      <div class="text-[#6b4f3f] font-semibold">
-        Hey, {{current_user.name}}
-      </div>
-    {% endif %}
+    <img src="static/images/logo.png" alt="Astrielle logo" class="h-16 w-auto">
+    <span class="brand">Astrielle</span>
+  </div>
 
+  <div class="flex items-center ml-auto gap-8">
+    <a href="/" class="hover:text-[#fbfbf2] transition">Home</a>
+    <a href="/browse" class="hover:text-[#fbfbf2] transition">Browse</a>
+
+    <a href="/cart">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-[#c4fff9] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    </a>
+
+    {% if current_user.is_authenticated %}
+      <p>Hii, {{ current_user.name }}! 🤍 </p>
+    {% endif %}
 
     <div class="relative group">
       <button class="hover:text-[#6b4f3f] flex items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 
-               3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </button>
 
-      <ul class="absolute right-0 mt-2 w-32 bg-[#e05780]  rounded-md 
-             opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-             transition-all duration-200 text-white">
+
+    {% if not current_user.is_authenticated %}
+      <ul class="absolute right-0 mt-2 w-32 bg-[#e05780] rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-white">
         <li><a href="/login" class="block px-4 py-2 hover:bg-[#FFC2D1]">Log in</a></li>
         <li><a href="/sign_up" class="block px-4 py-2 hover:bg-[#FFC2D1]">Sign up</a></li>
       </ul>
-      </nav>
+      {%else%}
+        <ul class="absolute right-0 mt-2 w-32 bg-[#e05780] rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-white">
+          <li><a href="/logout" class="block px-4 py-2 hover:bg-[#FFC2D1]">Logout</a></li>
+      {%endif%}
+
     </div>
   </div>
-</div>
-
+</nav>
   </body>
 </html>

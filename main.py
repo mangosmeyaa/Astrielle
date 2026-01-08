@@ -24,16 +24,16 @@ class User:
       self.email = result['Email']
       self.address = result['Address']
       self.id = result['ID']
-
-def get_id(self):
-    return str(self.id)
+    
+  def get_id(self):
+        return str(self.id)
 
 @login_manager.user_loader
 def load_user(user_id):
 
   connection = connect_db()
   cursor = connection.cursor()
-  cursor.execute("SELECT * FROM `USER` WHERE `ID` = %s" , (user_id))
+  cursor.execute("SELECT * FROM `User` WHERE `ID` = %s" , (user_id))
 
   result = cursor.fetchone()
   connection.close()
@@ -168,13 +168,11 @@ def login():
         elif password != result["Password"]:
             flash("Incorrect password")
         else:
-            login_user(User (result))
+            login_user(User(result))
 
             return redirect('/browse')
         
 
-        
-        
 
     return render_template("login.html.jinja")
 
