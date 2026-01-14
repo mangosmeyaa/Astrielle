@@ -103,7 +103,7 @@ def add_to_cart(product_id):
     INSERT INTO `Cart` (`Quantity`, `ProductID`, `UserID`)
     VALUES(%s, %s, %s)
     ON DUPLICATE KEY UPDATE
-    `Quantity` + %s
+     `Quantity` = `Quantity` + %s
  """, (quantity, product_id, current_user.id, quantity))
   
   connection.close()
@@ -184,10 +184,10 @@ def logout():
     return redirect("/login")
 
 
-@app.route('/cart')
+@app.route('/cart', methods=["POST", "GET"])
 @login_required
 def cart():
-    connection = connect_db
+    connection = connect_db()
 
     cursor = connection.cursor()
 
@@ -199,27 +199,45 @@ def cart():
     results = cursor.fetchall()
 
     connection.close()
+    
+    subtotal = sum(
+    item["Price"] * item["Quantity"]
+    for item in results
+    )
 
-
-    return render_template("cart.html.jinja", y)
+    return render_template("cart.html.jinja", cart = results, subtotal=subtotal)
 
 @app.route('/cart/<product_id>/update_qty', methods=["POST"])
 @login_required
 def update_cart(product_id):
   new_qty = request.form['qty']
-  connection = connect_db
+  connection = connect_db()
   cursor = connection.cursor()
 
-  cursor.execute(""""
+  cursor.execute("""
     UPDATE `Cart`
     SET `Quantity` = %s
     WHERE `ProductID` = %s AND `UserID` = %s
-
  """, (new_qty, product_id, current_user.id) )
   
   connection.close()
 
   return redirect('/cart')
+
+@app.route("/cart/<product_id>/delete", methods=["POST"])
+@login_required
+def delete_from_cart(product_id):
+    connection = connect_db()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        DELETE FROM Cart
+        WHERE ProductID = %s AND UserID = %s
+    """, (product_id, current_user.id))
+
+    connection.close()
+    return redirect("/cart")
+
 
 @app.route('/checkout')
 def checkout():
@@ -265,8 +283,8 @@ def orders():
         SELECT
            `Sale`.`ID`,
            `Sale`.`Timestamp`,
-              SUM(`SaleProduct`.`Quantity`) AS `Quantity`,
-              SUM(`SaleProduct`.Quantity * `Product`.`Price`) AS 'Total'
+            SUM(`SaleProduct`.`Quantity`) AS `Quantity`,
+            SUM(`SaleProduct`.Quantity * `Product`.`Price`) AS 'Total'
         FROM `Sale`
         JOIN `SaleProduct` ON `SaleProduct`.`SaleID` = `Sale`. `ID`
         JOIN `Product` ON `Product`. `ID` = `SaleProduct`.`ProductID`

@@ -1,24 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
 <head>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-{% include "components/navbar.html.jinja" %}
-    {% for x in cart %}
-    <div class="cart-row"
-    <img src="{{x['Image]}}">
-    <div>{{x['Name']}}</div>
-<div>
-<form method="post" action="/cart{{x['ProductID'] }}/update_qty">
-       <input name="qty" type="number" value=" {{x['Quantity']}}">
-</form>
-</div>
-    <div>${{x['Price']}}</div>
-    <div>${{ x['Price'] * x['Quantity'] }}</div> 
+<body class="bg-[#F4EBE8] font-mono text-[#4a3728]">
+  {% include "components/navbar.html.jinja" %}
 
-<div>{{x}}</div>
-{% endfor %}
+  <main class="max-w-4xl mx-auto px-6 py-12">
+    <div class="flex items-center gap-3 mb-10">
+      <h1 class="text-3xl font-bold">Your Cart</h1>
+      {% if cart %}
+        <span class="bg-[#e05780] text-white text-sm px-3 py-1 rounded-full">{{ cart|length }} Items</span>
+      {% endif %}
+    </div>
+
+    {% if cart %}
+      <div class="space-y-6">
+        {% for x in cart %}
+          <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-6 flex flex-col md:flex-row items-center gap-8 border border-white shadow-sm hover:shadow-md transition-all">
+            
+            <div class="w-32 h-32 bg-white rounded-2xl p-2 flex items-center justify-center overflow-hidden shadow-inner">
+              <a href="/product/{{x['ProductID']}}">
+                <img src="{{ x['Image'] }}" alt="{{ x['Name'] }}" class="object-contain w-full h-full transform hover:scale-110 transition-transform">
+              </a>
+            </div>
+
+            <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
+              <div>
+                <a href="/product/{{x['ProductID']}}" class="text-xl font-bold text-[#4a3728] hover:text-[#e05780] transition-colors">
+                  {{ x["Name"] }}
+                </a>
+                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Product ID: #{{ x['ProductID'] }}</p>
+              </div>
+
+              <div class="flex items-center gap-6">
+                <form method="post" action="/cart/{{x['ProductID']}}/update_qty" class="flex items-center bg-white rounded-full px-4 py-2 border border-pink-100">
+                  <label class="text-xs uppercase tracking-widest mr-3 text-gray-400">Qty</label>
+                  <input name="qty" type="number" value="{{x['Quantity']}}" min="1" max="20" 
+                    onchange="this.form.submit()"
+                    class="w-12 font-bold bg-transparent focus:outline-none">
+                </form>
+
+                <p class="text-xl font-bold text-[#e05780]">¥{{ x["Price"] }}</p>
+
+                <form method="post" action="/cart/{{x['ProductID']}}/delete">
+                  <button type="submit" class="p-2 text-gray-300 hover:text-red-400 transition-colors" title="Remove Item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-12 bg-white rounded-3xl p-8 border border-pink-100 shadow-xl shadow-pink-900/5">
+        <div class="flex justify-between items-center mb-6">
+          <span class="text-gray-500 font-bold uppercase tracking-widest text-sm">Estimated Subtotal</span>
+          <span class="text-3xl font-bold text-[#4a3728]">¥{{"%.2f"|format(subtotal)}}</span>
+        </div>
+        
+        <button class="w-full bg-[#e05780] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#c9466f] transition-all transform hover:-translate-y-1 shadow-lg shadow-pink-200">
+          Proceed to Checkout
+        </button>
+
+        <a href="/browse" class="block text-center mt-6 text-[#e05780] hover:underline text-sm font-bold uppercase tracking-widest">
+          ← Continue Shopping
+        </a>
+      </div>
+
+    {% else %}
+      <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-20 text-center border border-white border-dashed">
+        <div class="text-6xl mb-4">🧸</div>
+        <h2 class="text-2xl font-bold text-[#4a3728]">Your cart is empty</h2>
+        <p class="text-gray-500 mt-2 mb-8">Looks like you haven’t found a cuddle buddy yet!</p>
+        <a href="/browse" class="bg-[#e05780] text-white px-8 py-3 rounded-full font-bold hover:bg-[#c9466f] transition-all">
+          Browse Plushies
+        </a>
+      </div>
+    {% endif %}
+  </main>
+
 </body>
 </html>

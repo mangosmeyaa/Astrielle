@@ -1,52 +1,59 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="styles.css">
-    <title>Browse Page</title>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>Browse Our Friends | Astrielle</title>
+</head>
 
-    <body>
+<body class="bg-[#F4EBE8] font-mono text-[#4a3728]">
     {% include "components/navbar.html.jinja" %}
-    <br>
- <h1 class="text-3xl text-center">Our Products!</h1>
- <br>
-        <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 p-5">
+
+    <header class="py-12 text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-[#4a3728]">Our Products <span class="text-[#e05780]">🤍</span></h1>
+        <div class="w-20 h-1 bg-[#e05780] mx-auto mt-4 rounded-full"></div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {% for x in products %}
-                <a href="/product/{{x['ID']}}" class="bg-[#f8f9fa] rounded-xl shadow hover:shadow-lg transition p-2">
+                <a href="/product/{{x['ID']}}" class="group bg-white/50 backdrop-blur-sm rounded-3xl p-4 border border-white shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
                     
-                    <!-- Product Image -->
-                    <div class="w-full aspect-square overflow-hidden rounded-lg">
+                    <div class="relative w-full aspect-square overflow-hidden rounded-2xl bg-white shadow-inner">
                         <img 
                             src="{{ x['Image'] }}" 
                             alt="{{ x['Name'] }}" 
-                            class="w-full h-full object-cover"
+                            class="w-full h-full object-contain p-4 transform group-hover:scale-110 transition-transform duration-500"
                         >
+                        <div class="absolute inset-0 bg-[#e05780]/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                           <span class="bg-white text-[#e05780] px-4 py-2 rounded-full text-xs font-bold shadow-sm">View Details</span>
+                        </div>
                     </div>
 
-                    <!-- Product Info -->
-                    <div class="mt-4 space-y-1">
-
-                        <h3 class="text-lg font-semibold text-gray-800 line-clamp-1">
+                    <div class="mt-5 px-2">
+                        <p class="text-[10px] uppercase tracking-[0.2em] text-[#e05780] font-bold mb-1">
+                            {{ x["Category"] }}
+                        </p>
+                        
+                        <h3 class="text-lg font-bold text-[#4a3728] line-clamp-1 group-hover:text-[#e05780] transition-colors">
                             {{ x["Name"] }}
                         </h3>
 
-                        <p class="text-xl font-bold text-gray-900">
-                            ¥{{ x["Price"] }}
-                        </p>
-
-                        <p class="text-sm text-gray-500">
-                            {{ x["Category"] }}
-                        </p>
+                        <div class="flex items-center justify-between mt-3">
+                            <p class="text-xl font-bold text-[#4a3728]">
+                                ¥{{ x["Price"] }}
+                            </p>
+                            <div class="text-[#e05780] opacity-0 group-hover:opacity-100 transition-opacity">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-
                 </a>
             {% endfor %}
-        </main>
-    
+        </div>
+    </main>
 </body>
-
-  
 </html>

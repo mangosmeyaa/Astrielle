@@ -9,7 +9,7 @@
     {% for x in cart %}
     <div class="cart-row"
     <img src="{{x['Image]}}">
-    <div>{{x['Name']}}</div>
+    <div> {{x['Name']}} </div>
 <div>
 <form method="post" action="/cart{{x['ProductID'] }}/update_qty">
        <input name="qty" type="number" value=" {{x['Quantity']}}">
