@@ -15,7 +15,12 @@
 
         <!-- Product Image -->
         <div class="h-[500px] bg-[#f0e6de] rounded-3xl flex items-center justify-center">
-          <span class="text-gray-400 text-lg">Product Image</span>
+        <img 
+                        src= "{{ product ['Image'] }}" 
+                        alt= "{{ product ['Name'] }}"
+                        class="w-full h-full object-cover"
+                        >
+
         </div>
 
         <!-- Product Content -->
@@ -30,8 +35,7 @@
           </p>
 
           <p class/="text-lg text-gray-600 max-w-xl">
-            This is a short description of the project or product.
-            It’s intentionally larger so the page feels premium and focused.
+            {{product["Description"]}}
           </p>
 
           <!-- Quantity & Cart -->
@@ -61,6 +65,13 @@
               Add to Cart
             </button>
 
+{# Review form #}
+<form method="post" action="/product['ID']}}/review">
+<label>Rating</label>
+<input name="rating" input type="number" min="1" max="5">
+<label>Comments</label>
+<textarea></textarea><br>
+<button type="submit">Submit</button>
           </form>
 
         </div>

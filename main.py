@@ -298,3 +298,23 @@ def orders():
 
     return render_template("orders.html.jinja", orders= results)
     
+
+app.route("/product/<product_id>/review", methods=["POST"])
+@login_required
+def add_review(product_id):
+   ratings = request.form["rating"]
+   comments = request.form["comments"]
+   connection = connect_db()
+   cursor = connection.cursor()
+   cursor.execute("""
+INSERT INTO `Review`
+ (`Ratings`, `Comments`, `UserID`, `ProductID` )
+VALUES
+                (%s,%s,%s,%s)
+                                         
+""", (ratings, comments, current_user.id, product_id))
+   
+   connection.close()
+   
+   return redirect(f"/product/{product_id}")
+
