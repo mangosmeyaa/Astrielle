@@ -1,27 +1,50 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="styles.css">
-    <title>Browse Page</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>Login | Astrielle</title>
+</head>
+<body class="bg-[#fdfdf0] flex flex-col min-h-screen text-[#4a443f]">
+  {% include "components/navbar.html.jinja"%}
 
-  </head>
-    <body>
-     {% include "components/navbar.html.jinja"%}
+  <div class="flex-grow flex items-center justify-center p-6">
+    <div class="bg-white p-10 rounded-2xl shadow-sm border border-[#ecebd1] w-full max-w-md">
+      
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-2 tracking-tight">Astrielle</h1>
+        <div class="h-1 w-12 bg-[#d98096] mx-auto rounded-full"></div>
+        <p class="mt-4 text-gray-500 italic">Welcome back, friend!</p>
+      </div>
 
-{%for message in get_flashed_messages()%}
-<li>{{message}}</li>
-{%endfor%}
+      {%for message in get_flashed_messages()%}
+        <div class="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm text-center">{{message}}</div>
+      {%endfor%}
     
-<form class="flex flex-col gap-2" method="post">
-    <label>Email</label>
-    <input required type="email" name="email">
+      <form class="space-y-5" method="post">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Email</label>
+          <input required type="email" name="email" placeholder="heart@astrielle.com"
+                 class="w-full px-4 py-3 bg-[#fdfdfb] border border-[#ecebd1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d98096]/30 focus:border-[#d98096] transition-all">
+        </div>
 
-    <label>Password</label>
-    <input required type="password" name="password">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Password</label>
+          <input required type="password" name="password" placeholder="••••••••"
+                 class="w-full px-4 py-3 bg-[#fdfdfb] border border-[#ecebd1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d98096]/30 focus:border-[#d98096] transition-all">
+        </div>
 
-    <button type="submit">Login</button>
- </body>
- </html>
+        <button type="submit" 
+                class="w-full bg-[#d98096] text-white py-3 rounded-xl hover:bg-[#c66e83] transition-colors font-bold shadow-md shadow-pink-100 mt-2">
+          Login
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-gray-500 mt-8">
+        New to the magic? <a href="/signup" class="text-[#d98096] font-bold hover:underline">Create an account</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

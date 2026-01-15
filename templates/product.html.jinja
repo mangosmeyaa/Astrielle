@@ -1,82 +1,123 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="styles.css">
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>{{ product["Name"] }} | Astrielle</title>
+</head>
 
-  <body>
-    {% include "components/navbar.html.jinja" %}
+<body class="bg-[#fdfdf0] text-[#4a443f] min-h-screen">
+  {% include "components/navbar.html.jinja" %}
+  <div class="space-y-6 mb-10">
 
-    <div class="min-h-screen flex items-center justify-center bg-[#f6eee8] px-8">
-      <div class="w-full max-w-7xl bg-[#f6eee8] grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+  
+  </div>
+  <div class="max-w-7xl mx-auto px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
 
-        <!-- Product Image -->
-        <div class="h-[500px] bg-[#f0e6de] rounded-3xl flex items-center justify-center">
+      <div class="aspect-[4/5] bg-white rounded-[2rem] overflow-hidden shadow-sm border border-[#ecebd1] flex items-center justify-center">
         <img 
-                        src= "{{ product ['Image'] }}" 
-                        alt= "{{ product ['Name'] }}"
-                        class="w-full h-full object-cover"
-                        >
+          src="{{ product['Image'] }}" 
+          alt="{{ product['Name'] }}"
+          class="w-full h-full object-cover"
+        >
+      </div>
 
-        </div>
-
-        <!-- Product Content -->
-        <div class="space-y-8">
-
-          <h1 class="text-5xl font-semibold text-gray-800">
+      <div class="flex flex-col h-full justify-center">
+        <div class="space-y-6">
+          <h1 class="text-6xl font-bold tracking-tight text-[#4a443f]">
             {{ product["Name"] }}
           </h1>
 
-          <p class="text-3xl font-medium text-green-700">
+          <p class="text-4xl font-light text-[#d98096]">
             ¥{{ product["Price"] }}
           </p>
 
-          <p class/="text-lg text-gray-600 max-w-xl">
-            {{product["Description"]}}
+          <p class="text-xl text-gray-500 leading-relaxed max-w-xl italic">
+            "{{ product['Description'] }}"
           </p>
 
-          <!-- Quantity & Cart -->
+          <hr class="border-[#ecebd1] w-24">
+
           <form
             method="post"
             action="/product/{{product['ID']}}/add_to_cart"
-            class="flex items-center gap-6 pt-6"
+            class="flex flex-wrap items-center gap-4 pt-4"
           >
-
-            <!-- Quantity -->
-            <div class="flex items-center border border-gray-300 rounded-xl overflow-hidden">
+            <div class="flex items-center bg-white border border-[#ecebd1] rounded-2xl overflow-hidden shadow-sm">
+              <label class="pl-4 text-xs font-bold uppercase tracking-widest text-gray-400">Qty</label>
               <input
                 type="number"
                 name="qty"
                 value="1"
                 min="1"
                 max="20"
-                class="w-24 text-center text-xl py-4 outline-none bg-transparent"
+                class="w-20 text-center text-lg py-4 outline-none font-semibold"
               />
             </div>
 
-            <!-- Add to Cart -->
             <button
               type="submit"
-              class="bg-green-700 hover:bg-green-800 text-white text-lg px-10 py-4 rounded-xl transition"
+              class="bg-[#d98096] hover:bg-[#c66e83] text-white text-lg px-12 py-4 rounded-2xl transition-all font-bold shadow-md shadow-pink-100 flex-grow md:flex-grow-0"
             >
               Add to Cart
             </button>
-
-{# Review form #}
-<form method="post" action="/product['ID']}}/review">
-<label>Rating</label>
-<input name="rating" input type="number" min="1" max="5">
-<label>Comments</label>
-<textarea></textarea><br>
-<button type="submit">Submit</button>
           </form>
+        </div>
 
+        <div class="mt-16 p-8 bg-white/50 rounded-3xl border border-[#ecebd1]">
+          <h3 class="text-lg font-bold mb-4 uppercase tracking-widest text-[#d98096]">Leave a Review</h3>
+          <form method="post" action="/product/{{product['ID']}}/review" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <div class="sm:col-span-1">
+                <label class="block text-xs font-bold mb-1">Rating (1-5)</label>
+                <input name="rating" type="number" min="1" max="5" value="5"
+                       class="w-full p-3 bg-white border border-[#ecebd1] rounded-xl focus:ring-2 focus:ring-[#d98096]/20 outline-none">
+              </div>
+              <div class="sm:col-span-3">
+                <label class="block text-xs font-bold mb-1">Comments</label>
+                <textarea name="comment" rows="1" placeholder="Share the magic..."
+                          class="w-full p-3 bg-white border border-[#ecebd1] rounded-xl focus:ring-2 focus:ring-[#d98096]/20 outline-none"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="text-sm font-bold text-[#d98096] hover:text-[#c66e83] transition-colors flex items-center gap-2">
+              Submit Review <span>→</span>
+            </button>
+          </form>
         </div>
       </div>
-    </div>
 
-  </body>
+    </div>
+  </div>
+
+{% if reviews %}
+  {% for review in reviews %}
+    <div class="bg-white p-5 rounded-xl shadow border border-purple-200">
+      <div class="flex items-center justify-between mb-2">
+        <p class="font-semibold text-purple-800">
+          {{ review["Name"] }}
+        </p>
+        <p class="text-sm text-neutral-500">
+          {{ review["Timestamp"].strftime("%B %d, %Y at %I:%M %p") }}
+        </p>
+      </div>
+
+      <div class="text-yellow-500 mb-2">
+        {% for i in range(review["Ratings"]) %}
+          ⭐
+        {% endfor %}
+      </div>
+
+      <p class="text-neutral-700">
+        {{ review["Comments"] }}
+      </p>
+    </div>
+  {% endfor %}
+{% else %}
+  <p class="text-neutral-500 italic">No reviews yet.</p>
+{% endif %}
+
+</html>
+</body>
 </html>
