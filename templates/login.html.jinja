@@ -22,7 +22,7 @@
         <div class="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm text-center">{{message}}</div>
       {%endfor%}
     
-      <form class="space-y-5" method="post">
+      <form class="space-y-5" method="post" onsubmit="return checkPasswords()">
         <div>
           <label class="block text-sm font-semibold mb-1">Email</label>
           <input required type="email" name="email" placeholder="heart@astrielle.com"
@@ -31,7 +31,13 @@
 
         <div>
           <label class="block text-sm font-semibold mb-1">Password</label>
-          <input required type="password" name="password" placeholder="••••••••"
+          <input required type="password" id="password" name="password" placeholder="••••••••"
+                 class="w-full px-4 py-3 bg-[#fdfdfb] border border-[#ecebd1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d98096]/30 focus:border-[#d98096] transition-all">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Confirm Password</label>
+          <input required type="password" id="confirm_password" name="confirm_password" placeholder="••••••••"
                  class="w-full px-4 py-3 bg-[#fdfdfb] border border-[#ecebd1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d98096]/30 focus:border-[#d98096] transition-all">
         </div>
 
@@ -46,5 +52,16 @@
       </p>
     </div>
   </div>
+
+  <script>
+    function checkPasswords() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm_password').value;
+      if (password !== confirm) {
+        alert("Passwords do not match!");
+        return false; 
+      return true; 
+    }
+  </script>
 </body>
 </html>
