@@ -93,11 +93,13 @@
 
 {% if reviews %}
   {% for review in reviews %}
-    <div class="bg-white p-5 rounded-xl shadow border border-purple-200">
+    <div class="bg-white p-5 rounded-xl shadow ">
       <div class="flex items-center justify-between mb-2">
-        <p class="font-semibold text-purple-800">
+        
+        <p class="font-semibold text-pink-400">
           {{ review["Name"] }}
         </p>
+
         <p class="text-sm text-neutral-500">
           {{ review["Timestamp"].strftime("%B %d, %Y at %I:%M %p") }}
         </p>

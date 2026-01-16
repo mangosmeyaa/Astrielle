@@ -76,23 +76,25 @@ def browse():
 @app.route("/product/<product_id>")
 def product_page(product_id):
     connection = connect_db()
-
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM `Product` WHERE ID = %s", ( product_id ))
+    # Get product info
+    cursor.execute("SELECT * FROM Product WHERE ID=%s", (product_id,))
+    product = cursor.fetchone()
 
-    result = cursor.fetchone()
-
-    cursor.execute("SELECT * FROM `Reviews` WHERE ProductID = %s", ( product_id ))
-    result2 = cursor.fetchall()
-
+    # Get reviews with usernames
+    cursor.execute("""
+        SELECT * 
+        FROM Reviews r
+        JOIN User u ON r.UserID = u.id
+        WHERE r.ProductID = %s
+        ORDER BY r.Timestamp DESC
+    """, (product_id,))
+    reviews = cursor.fetchall()
 
     connection.close()
-    
-    if result is None:
-       abort(404)
+    return render_template("product.html.jinja", product=product, reviews=reviews)
 
-    return render_template("product.html.jinja", product=result, reviews=result2)
 
 
 @app.route("/product/<product_id>/add_to_cart", methods=["POST"])
@@ -332,21 +334,21 @@ def order():
 @app.route("/product/<product_id>/review", methods=["POST"])
 @login_required
 def add_review(product_id):
-   ratings = request.form["rating"]
-   comments = request.form["comment"]
-   connection = connect_db()
-   cursor = connection.cursor()
-   cursor.execute("""
-INSERT INTO `Reviews`
- (`Ratings`, `Comments`, `UserID`, `ProductID` )
-VALUES
-                (%s,%s,%s,%s)
+    ratings = request.form["rating"]
+    comments = request.form["comment"]
+    connection = connect_db()
+    cursor = connection.cursor()
+    cursor.execute("""
+            INSERT INTO Reviews
+                    (`Ratings`, `Comments`, `UserID`, `ProductID` )
+            VALUES
+                    (%s, %s, %s, %s)
                                          
-""", (ratings, comments, current_user.id, product_id))
-   
-   connection.close()
+    """, (ratings, comments, current_user.id, product_id))
+    
+    connection.close()
 
-   return redirect(f"/product/{product_id}")
+    return redirect(f"/product/{product_id}")
 
 @app.route('/thank-you')
 def thankyou():
