@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-   
-<nav class="bg-[#F4EBE8] p-5 px-6 shadow-md flex items-center font-mono text-[#000000] sticky top-0 z-50">
+
+<body>
+<nav class="bg-[#F4EBE8] p-5 px-6 shadow-md flex items-center font-mono text-[#000000] top-0 z-50">
   <div class="flex items-center gap-2">
     <img src="/static/images/logo.png" alt="Astrielle logo" class="h-10 w-auto">
     <span class="brand font-bold text-lg">Astrielle</span>
@@ -40,8 +41,11 @@
           <a href="/sign_up" class="block px-4 py-3 text-gray-700 hover:bg-[#e05780] hover:text-white transition">Sign up</a>
         {% else %}
           <a href="/logout" class="block px-4 py-3 text-gray-700 hover:bg-[#e05780] hover:text-white transition">Logout</a>
+          <a href="/orders" class="block px-4 py-3 text-gray-700 hover:bg-[#e05780] hover:text-white transition">My Orders</a>
         {% endif %}
       </div>
     </div>
   </div>
 </nav>
+</body>
+</html>

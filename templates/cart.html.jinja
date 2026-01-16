@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
@@ -64,9 +64,8 @@
           <span class="text-3xl font-bold text-[#4a3728]">¥{{"%.2f"|format(subtotal)}}</span>
         </div>
         
-        <button class="w-full bg-[#e05780] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#c9466f] transition-all transform hover:-translate-y-1 shadow-lg shadow-pink-200">
-          Proceed to Checkout
-        </button>
+        <a href="/checkout" class="w-full bg-[#e05780] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#c9466f] transition-all transform hover:-translate-y-1 shadow-lg shadow-pink-200 ml-74">
+         Proceed to Checkout</a>
 
         <a href="/browse" class="block text-center mt-6 text-[#e05780] hover:underline text-sm font-bold uppercase tracking-widest">
           ← Continue Shopping
@@ -84,6 +83,5 @@
       </div>
     {% endif %}
   </main>
-
 </body>
 </html>

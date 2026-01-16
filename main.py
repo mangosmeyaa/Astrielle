@@ -189,7 +189,7 @@ def logout():
     return redirect("/login")
 
 
-@app.route('/cart', methods=["POST", "GET"])
+@app.route('/cart')
 @login_required
 def cart():
     connection = connect_db()
@@ -243,65 +243,90 @@ def delete_from_cart(product_id):
     connection.close()
     return redirect("/cart")
 
-
-@app.route('/checkout')
+@app.route("/checkout", methods=["GET", "POST"])
+@login_required
 def checkout():
-    connection = connect_db
+        connection = connect_db()
 
-    cursor = connection.cursor()
+        cursor = connection.cursor()
 
-    cursor.execute("""
-        SELECT * FROM `Cart`
-        JOIN `Product` ON `Product`. `ID` = `Cart` . `ProductID`
-        WHERE `UserID` = %s  
-    """,  (current_user.id))
-    results = cursor.fetchall()
-
-    if request.method == 'POST':
-     cursor.execute("INSERT INTO `Sale` (`UserID`) VALUES (%s)" , (current_user.id, ))
-     sale = cursor.lastrowid
-     for item in results:
         cursor.execute("""
-        INSERT INTO `SaleProduct`
-              (`Sale_ID`, `Product_ID`, `Quantity`)
-        VALUES
-            (%s, %s, %s)
-                       """, (sale, item['ProductID'], item['Quantity']))
-        
-        cursor.execute('DELETE FROM `Cart` WHERE `UserID` = %s', (current_user.id,))
-        
-        redirect ('/thank-you')
-
-     connection.close()
+            SELECT * FROM `Cart`
+            Join `Product` ON `Product`.`ID` = `Cart`.`ProductID`
+            WHERE `UserID` = %s            
+                   
+        """,(current_user.id))
 
 
-    return render_template("checkout.html.jinja", y)
+        result = cursor.fetchall()
 
-@app.route('/orders')
-def orders():
 
-    connection = connect_db
+        if request.method == 'POST':
+           
+            cursor.execute("INSERT INTO `Sale` (`UserID`) VALUES (%s)", ( current_user.id, ) )
+           
+            sale = cursor.lastrowid
+            for item in result:
+                cursor.execute( """
+                    INSERT INTO `SaleCart`
+                        (`SaleID`,`ProductID`, `Quantity`)
+                    VALUES
+                        (%s,%s,%s)
+                               
+                           
+                            """  , (sale, item['ProductID'], item['Quantity']))
+           
+            cursor.execute("DELETE FROM `Cart` WHERE `UserID` = %s", (current_user.id,))
+           
 
+
+            return redirect('/thank-you')      
+
+
+        total = 0
+
+
+        for item in result:
+            total += item["Price"] * item["Quantity"]
+
+
+        connection.close()
+
+
+        return render_template("checkout.html.jinja", cart=result, total=total)
+
+
+
+
+@app.route("/orders")
+@login_required
+def order():
+    connection = connect_db()
     cursor = connection.cursor()
+
 
     cursor.execute("""
         SELECT
-           `Sale`.`ID`,
-           `Sale`.`Timestamp`,
-            SUM(`SaleProduct`.`Quantity`) AS `Quantity`,
-            SUM(`SaleProduct`.Quantity * `Product`.`Price`) AS 'Total'
+             `Sale`.`ID`,
+             `Sale`.`Timestamp`,
+            SUM(`SaleCart`.Quantity) AS 'Quantity',
+            SUM(`SaleCart`.`Quantity` * `Product`.`Price`) AS 'Total'
         FROM `Sale`
-        JOIN `SaleProduct` ON `SaleProduct`.`SaleID` = `Sale`. `ID`
-        JOIN `Product` ON `Product`. `ID` = `SaleProduct`.`ProductID`
-        WHERE `UserID` = %s
-        GROUP BY `Sale`. `ID`;
-                """, (current_user.id))
-    
+        JOIN `SaleCart` ON `SaleCart`.`SaleID` = `Sale`.`ID`
+        JOIN `Product` ON `Product`.`ID` = `SaleCart`.`ProductID`
+        WHERE `UserID` =%s
+        GROUP BY `Sale`.`ID`;
+    """,(current_user.id,))
+
+
     results = cursor.fetchall()
+
 
     connection.close()
 
-    return render_template("orders.html.jinja", orders= results)
+
+    return render_template("orders.html.jinja", order=results)
+
     
 
 @app.route("/product/<product_id>/review", methods=["POST"])
@@ -323,3 +348,11 @@ VALUES
 
    return redirect(f"/product/{product_id}")
 
+@app.route('/thank-you')
+def thankyou():
+        return render_template("thankyou.html.jinja") 
+    
+
+@app.errorhandler(404)
+def page_not_found(e):
+      return render_template("error.html.jinja")
