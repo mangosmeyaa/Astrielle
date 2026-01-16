@@ -36,7 +36,7 @@
         </div>
 
         
-        <div class="bg-white p-8 rounded-3xl shadow-sm border h-fit sticky top-10">
+        <div class="bg-white p-8 rounded-3xl shadow-sm h-fit sticky top-10">
             <h2 class="text-2xl font-bold mb-6">Order Summary</h2>
 
             <div class="space-y-6 mb-8">
@@ -53,7 +53,7 @@
                             <p class="text-xs uppercase">Qty {{ x['Quantity'] }}</p>
                         </div>
                     </div>
-                    <span>${{ x['Price'] * x['Quantity'] }}</span>
+                    <span>¥{{ x['Price'] * x['Quantity'] }}</span>
                 </div>
                 {% endfor %}
             </div>
@@ -61,11 +61,11 @@
             <div class="border-t pt-6 space-y-3">
                 <div class="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${{ total }}</span>
+                    <span>$¥{{ total }}</span>
                 </div>
                 <div class="flex justify-between font-bold text-xl">
                     <span>Total</span>
-                    <span>${{ total }}</span>
+                    <span>¥{{ total }}</span>
                 </div>
             </div>
 
